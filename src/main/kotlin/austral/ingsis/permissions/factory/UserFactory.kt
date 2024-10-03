@@ -1,13 +1,13 @@
 package austral.ingsis.permissions.factory
 
-import austral.ingsis.permissions.model.User
+import austral.ingsis.permissions.model.CodeUser
 import org.springframework.stereotype.Component
 
 @Component
 class UserFactory {
 
-    fun buildUser(username: String, email: String, password: String): User{
-        return User(name = username, email = email, password = password)
+    fun buildUser(username: String, email: String, password: String): CodeUser{
+        return CodeUser(name = username, email = email, password = password)
     }
 
 }
