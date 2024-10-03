@@ -18,4 +18,9 @@ class CommunicationController {
     fun respondMessage(): ResponseEntity<String> {
         return ResponseEntity.ok("Greetings from Permissions!")
     }
+
+    @GetMapping("/testConnection")
+    fun testConnection(): ResponseEntity<String> {
+        return ResponseEntity.ok("Permissions is online")
+    }
 }
