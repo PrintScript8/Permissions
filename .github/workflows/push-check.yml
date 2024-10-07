@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'dev'
 
 jobs:
   verify_valid:
@@ -15,7 +16,7 @@ jobs:
     needs: verify_valid
     uses: PrintScript8/ingsis-library/.github/workflows/docker-image.yml@main
     with:
-      service_name: 'permissions'
+      service_name: ${{ github.ref == 'refs/heads/main' && 'permissions' || 'permissions-dev' }}
 
 permissions:
   packages: write
