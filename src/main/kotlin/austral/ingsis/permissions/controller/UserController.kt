@@ -18,14 +18,14 @@ class UserController(
     @Autowired private val userService: UserService,
 ) {
     @GetMapping
-    fun getAllUsers(): List<CodeUser>  {
+    fun getAllUsers(): List<CodeUser> {
         return userService.findAllUsers()
     }
 
     @GetMapping("/{id}")
     fun getUserById(
         @PathVariable id: Long,
-    ): CodeUser?  {
+    ): CodeUser? {
         return userService.findUserById(id)
     }
 
@@ -40,14 +40,14 @@ class UserController(
     fun updateUser(
         @PathVariable id: Long,
         @RequestBody codeUser: CodeUser,
-    ): CodeUser?  {
+    ): CodeUser? {
         return userService.updateUser(id, codeUser)
     }
 
     @DeleteMapping("/{id}")
     fun deleteUser(
         @PathVariable id: Long,
-    )  {
+    ) {
         return userService.deleteUser(id)
     }
 }

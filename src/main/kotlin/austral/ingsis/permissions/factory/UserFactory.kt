@@ -9,7 +9,7 @@ class UserFactory {
         username: String,
         email: String,
         password: String,
-    ): CodeUser  {
+    ): CodeUser {
         return CodeUser(name = username, email = email, password = password)
     }
 }

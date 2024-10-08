@@ -11,11 +11,11 @@ class UserService(
     @Autowired private val userRepository: UserRepositoryInterface,
     @Autowired private val userFactory: UserFactory,
 ) {
-    fun findAllUsers(): List<CodeUser>  {
+    fun findAllUsers(): List<CodeUser> {
         return userRepository.findAll()
     }
 
-    fun findUserById(id: Long): CodeUser?  {
+    fun findUserById(id: Long): CodeUser? {
         return userRepository.findById(id).orElse(null)
     }
 
@@ -23,7 +23,7 @@ class UserService(
         name: String,
         email: String,
         password: String,
-    ): CodeUser  {
+    ): CodeUser {
         val codeUser: CodeUser = userFactory.buildUser(name, email, password)
         return userRepository.save(codeUser)
     }
