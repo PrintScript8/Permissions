@@ -12,10 +12,8 @@ data class CodeUser(
     val id: Long = 0,
     val name: String,
     val email: String,
-    val password: String
-)
-
-// no-argument constructor is necessary for JPA to function correctly
-{
+    val password: String,
+) {
+    // no-argument constructor is necessary for JPA to function correctly
     constructor() : this(0, "", "", "")
 }

@@ -9,11 +9,6 @@ import org.springframework.web.client.RestClient
 class CommunicationController {
     val testClient: RestClient = RestClient.builder().baseUrl("http://localhost:8080").build()
 
-    @GetMapping("/testRequestMessage")
-    fun callEndpoint(): ResponseEntity<String> {
-        return ResponseEntity.ok(testClient.get().uri("/testRespondMessage").retrieve().toEntity(String::class.java).body)
-    }
-
     @GetMapping("/testRespondMessage")
     fun respondMessage(): ResponseEntity<String> {
         return ResponseEntity.ok("Greetings from Permissions!")
