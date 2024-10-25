@@ -1,5 +1,6 @@
 package austral.ingsis.permissions.model
 
+import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -13,7 +14,9 @@ data class CodeUser(
     val name: String,
     val email: String,
     val password: String,
+    @ElementCollection
+    var snippets: List<Double>
 ) {
     // no-argument constructor is necessary for JPA to function correctly
-    constructor() : this(0, "", "", "")
+    constructor() : this(0, "",  "", "", emptyList())
 }

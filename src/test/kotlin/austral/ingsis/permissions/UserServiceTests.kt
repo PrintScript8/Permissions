@@ -18,7 +18,7 @@ class UserServiceTests {
 
     @Test
     fun findAllTest() {
-        val users = listOf(CodeUser(1, "john", "noOne@mail.com", "1234"))
+        val users = listOf(CodeUser(1, "john", "noOne@mail.com", "1234", listOf()))
         every { userRepository.findAll() } returns users
 
         val result = userService.findAllUsers()
@@ -29,7 +29,7 @@ class UserServiceTests {
 
     @Test
     fun findUserTest() {
-        val user = Optional.of(CodeUser(1, "john", "noOne@mail.com", "1234"))
+        val user = Optional.of(CodeUser(1, "john", "noOne@mail.com", "1234", listOf()))
         every { userRepository.findById(1) } returns user
 
         val result = userService.findUserById(1)
@@ -40,11 +40,11 @@ class UserServiceTests {
 
     @Test
     fun saveUserTest() {
-        val inputUser = CodeUser(name = "john", email = "noOne@mail.com", password = "1234")
-        val savedUser = CodeUser(1, "john", "noOne@mail.com", "1234")
+        val inputUser = CodeUser(0, "john", "noOne@mail.com", "1234", listOf())
+        val savedUser = CodeUser(0, "john", "noOne@mail.com", "1234", listOf())
         every { userRepository.save(inputUser) } returns savedUser
 
-        val result = userService.saveUser("john", "noOne@mail.com", "1234")
+        val result = userService.saveUser( "john", "noOne@mail.com", "1234")
 
         assertEquals(savedUser, result)
         verify(exactly = 1) { userRepository.save(inputUser) }
@@ -52,21 +52,16 @@ class UserServiceTests {
 
     @Test
     fun updateUserTest() {
-        val inputUser = CodeUser(1, "john doe", "noOne@mail.com", "1234")
-        val savedUser = CodeUser(1, "john", "noOne@mail.com", "1234")
+        val inputUser = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
+        val savedUser = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
         every { userRepository.existsById(1) } returns true
         every { userRepository.save(inputUser.copy(id = savedUser.id)) } returns
-            CodeUser(
-                1,
-                "john doe",
-                "noOne@mail.com",
-                "1234",
-            )
+            CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
 
         val result =
             userService.updateUser(
                 1,
-                CodeUser(1, "john doe", "noOne@mail.com", "1234"),
+                CodeUser(1, "john", "noOne@mail.com", "1234", listOf()),
             )
 
         assertEquals(inputUser, result)

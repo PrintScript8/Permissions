@@ -28,7 +28,7 @@ class UserControllerTests {
 
     @Test
     fun getAllUsersTest() {
-        val users = listOf(CodeUser(1, "john", "noOne@mail.com", "1234"))
+        val users = listOf(CodeUser(1, "john", "noOne@mail.com", "1234", listOf()))
         every { userService.findAllUsers() } returns users
 
         mockMvc.perform(get("/users"))
@@ -38,7 +38,7 @@ class UserControllerTests {
 
     @Test
     fun getUserByIdTest() {
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234")
+        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
         every { userService.findUserById(1) } returns user
 
         mockMvc.perform(get("/users/1"))
@@ -48,7 +48,7 @@ class UserControllerTests {
 
     @Test
     fun createUserTest() {
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234")
+        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
         every { userService.saveUser("john", "noOne@mail.com", "1234") } returns user
 
         mockMvc.perform(
@@ -62,7 +62,7 @@ class UserControllerTests {
 
     @Test
     fun updateUserTest() {
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234")
+        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
         every { userService.updateUser(1, user) } returns user
 
         mockMvc.perform(

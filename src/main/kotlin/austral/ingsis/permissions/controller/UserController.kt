@@ -3,6 +3,7 @@ package austral.ingsis.permissions.controller
 import austral.ingsis.permissions.model.CodeUser
 import austral.ingsis.permissions.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -33,7 +34,10 @@ class UserController(
     fun createUser(
         @RequestBody codeUser: CodeUser,
     ): CodeUser {
-        return userService.saveUser(codeUser.name, codeUser.email, codeUser.password)
+        return userService.saveUser(codeUser.name,
+            codeUser.email,
+            codeUser.password
+        )
     }
 
     @PutMapping("/{id}")
@@ -49,6 +53,33 @@ class UserController(
         @PathVariable id: Long,
     ) {
         return userService.deleteUser(id)
+    }
+
+    @GetMapping("/snippets/{id}")
+    fun getAllSnippets(@PathVariable id: String): List<Double> {
+        return userService.findUserById(id.toLong())?.snippets ?: emptyList()
+    }
+
+    @PutMapping("/snippets/{id}")
+    fun addSnippet(
+        @PathVariable id: String,
+        @RequestBody snippetId: Double,
+    ): ResponseEntity<Void> {
+        val user = userService.findUserById(id.toLong()) ?: return ResponseEntity.notFound().build()
+        user.snippets = user.snippets.plus(snippetId)
+        userService.updateUser(user.id, user)
+        return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("/snippets/{id}")
+    fun removeSnippet(
+        @PathVariable id: String,
+        @RequestBody snippetId: Double,
+    ): ResponseEntity<Void> {
+        val user = userService.findUserById(id.toLong()) ?: return ResponseEntity.notFound().build()
+        user.snippets = user.snippets.minus(snippetId)
+        userService.updateUser(user.id, user)
+        return ResponseEntity.ok().build()
     }
 }
 
