@@ -15,8 +15,8 @@ data class CodeUser(
     val email: String,
     val password: String,
     @ElementCollection
-    var snippets: List<Double>
+    var snippets: List<Long>,
 ) {
     // no-argument constructor is necessary for JPA to function correctly
-    constructor() : this(0, "",  "", "", emptyList())
+    constructor() : this(0, "", "", "", emptyList())
 }

@@ -34,9 +34,10 @@ class UserController(
     fun createUser(
         @RequestBody codeUser: CodeUser,
     ): CodeUser {
-        return userService.saveUser(codeUser.name,
+        return userService.saveUser(
+            codeUser.name,
             codeUser.email,
-            codeUser.password
+            codeUser.password,
         )
     }
 
@@ -56,27 +57,31 @@ class UserController(
     }
 
     @GetMapping("/snippets/{id}")
-    fun getAllSnippets(@PathVariable id: String): List<Double> {
-        return userService.findUserById(id.toLong())?.snippets ?: emptyList()
+    fun getAllSnippets(
+        @PathVariable id: Long,
+    ): List<Long> {
+        return userService.findUserById(id)?.snippets ?: emptyList()
     }
 
-    @PutMapping("/snippets/{id}")
+    @PutMapping("/snippets/{id}/{snippetId}")
     fun addSnippet(
-        @PathVariable id: String,
-        @RequestBody snippetId: Double,
+        @PathVariable id: Long,
+        @PathVariable snippetId: Long,
     ): ResponseEntity<Void> {
-        val user = userService.findUserById(id.toLong()) ?: return ResponseEntity.notFound().build()
-        user.snippets = user.snippets.plus(snippetId)
-        userService.updateUser(user.id, user)
+        val user: CodeUser = userService.findUserById(id) ?: return ResponseEntity.notFound().build()
+        if (!user.snippets.contains(snippetId)) {
+            user.snippets = user.snippets.plus(snippetId)
+            userService.updateUser(user.id, user)
+        }
         return ResponseEntity.ok().build()
     }
 
-    @DeleteMapping("/snippets/{id}")
+    @DeleteMapping("/snippets/{id}/{snippetId}")
     fun removeSnippet(
-        @PathVariable id: String,
-        @RequestBody snippetId: Double,
+        @PathVariable id: Long,
+        @PathVariable snippetId: Long,
     ): ResponseEntity<Void> {
-        val user = userService.findUserById(id.toLong()) ?: return ResponseEntity.notFound().build()
+        val user = userService.findUserById(id) ?: return ResponseEntity.notFound().build()
         user.snippets = user.snippets.minus(snippetId)
         userService.updateUser(user.id, user)
         return ResponseEntity.ok().build()

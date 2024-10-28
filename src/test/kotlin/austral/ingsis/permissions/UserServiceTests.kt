@@ -44,7 +44,7 @@ class UserServiceTests {
         val savedUser = CodeUser(0, "john", "noOne@mail.com", "1234", listOf())
         every { userRepository.save(inputUser) } returns savedUser
 
-        val result = userService.saveUser( "john", "noOne@mail.com", "1234")
+        val result = userService.saveUser("john", "noOne@mail.com", "1234")
 
         assertEquals(savedUser, result)
         verify(exactly = 1) { userRepository.save(inputUser) }

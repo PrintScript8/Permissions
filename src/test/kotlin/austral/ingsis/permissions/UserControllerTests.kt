@@ -81,4 +81,37 @@ class UserControllerTests {
         mockMvc.perform(delete("/users/1"))
             .andExpect(status().isOk)
     }
+
+    @Test
+    fun getAllSnippetsTest() {
+        val snippets = listOf(1L, 2L, 3L)
+        val user = CodeUser(1, "john", "noOne@mail.com", "1234", snippets)
+        every { userService.findUserById(1) } returns user
+
+        mockMvc.perform(get("/users/snippets/1"))
+            .andExpect(status().isOk)
+            .andExpect(content().json(jacksonObjectMapper().writeValueAsString(snippets)))
+    }
+
+    @Test
+    fun addSnippetTest() {
+        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf(1L))
+        every { userService.findUserById(1L) } returns user
+        every { userService.updateUser(1L, any()) } returns user.copy(snippets = listOf(1L, 2L))
+
+        mockMvc.perform(
+            put("/users/snippets/1/2"),
+        )
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    fun removeSnippetTest() {
+        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf(1L, 2L))
+        every { userService.findUserById(1) } returns user
+        every { userService.updateUser(1, any()) } returns user.copy(snippets = listOf(1L))
+
+        mockMvc.perform(delete("/users/snippets/1/2"))
+            .andExpect(status().isOk)
+    }
 }
