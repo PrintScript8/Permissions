@@ -14,5 +14,7 @@ class UserFactoryTests {
         Assertions.assertEquals("john", user.name)
         Assertions.assertEquals("noOne@mail.com", user.email)
         Assertions.assertEquals("1234", user.password)
+        Assertions.assertEquals(0L, user.id)
+        Assertions.assertEquals(listOf<Double>(), user.snippets)
     }
 }

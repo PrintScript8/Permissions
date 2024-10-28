@@ -10,6 +10,6 @@ class UserFactory {
         email: String,
         password: String,
     ): CodeUser {
-        return CodeUser(name = username, email = email, password = password)
+        return CodeUser(0L, username, email, password, emptyList())
     }
 }
