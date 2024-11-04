@@ -1,9 +1,8 @@
-package austral.ingsis.permissions
+package austral.ingsis.permissions.service
 
 import austral.ingsis.permissions.factory.UserFactory
-import austral.ingsis.permissions.model.CodeUser
+import austral.ingsis.permissions.model.UserSnippets
 import austral.ingsis.permissions.repository.UserRepositoryInterface
-import austral.ingsis.permissions.service.UserService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,7 +17,7 @@ class UserServiceTests {
 
     @Test
     fun findAllTest() {
-        val users = listOf(CodeUser(1, "john", "noOne@mail.com", "1234", listOf()))
+        val users = listOf(UserSnippets())
         every { userRepository.findAll() } returns users
 
         val result = userService.findAllUsers()
@@ -29,7 +28,7 @@ class UserServiceTests {
 
     @Test
     fun findUserTest() {
-        val user = Optional.of(CodeUser(1, "john", "noOne@mail.com", "1234", listOf()))
+        val user = Optional.of(UserSnippets())
         every { userRepository.findById(1) } returns user
 
         val result = userService.findUserById(1)
@@ -40,11 +39,11 @@ class UserServiceTests {
 
     @Test
     fun saveUserTest() {
-        val inputUser = CodeUser(0, "john", "noOne@mail.com", "1234", listOf())
-        val savedUser = CodeUser(0, "john", "noOne@mail.com", "1234", listOf())
+        val inputUser = UserSnippets()
+        val savedUser = UserSnippets()
         every { userRepository.save(inputUser) } returns savedUser
 
-        val result = userService.saveUser("john", "noOne@mail.com", "1234")
+        val result = userService.saveUser()
 
         assertEquals(savedUser, result)
         verify(exactly = 1) { userRepository.save(inputUser) }
@@ -52,16 +51,16 @@ class UserServiceTests {
 
     @Test
     fun updateUserTest() {
-        val inputUser = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
-        val savedUser = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
+        val inputUser = UserSnippets(1L, emptyList(), emptyList())
+        val savedUser = UserSnippets(1L, emptyList(), emptyList())
         every { userRepository.existsById(1) } returns true
         every { userRepository.save(inputUser.copy(id = savedUser.id)) } returns
-            CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
+            UserSnippets(1L, emptyList(), emptyList())
 
         val result =
             userService.updateUser(
                 1,
-                CodeUser(1, "john", "noOne@mail.com", "1234", listOf()),
+                UserSnippets(1L, emptyList(), emptyList()),
             )
 
         assertEquals(inputUser, result)

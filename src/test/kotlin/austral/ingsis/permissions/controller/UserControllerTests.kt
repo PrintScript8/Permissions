@@ -1,7 +1,6 @@
-package austral.ingsis.permissions
+package austral.ingsis.permissions.controller
 
-import austral.ingsis.permissions.controller.UserController
-import austral.ingsis.permissions.model.CodeUser
+import austral.ingsis.permissions.model.UserSnippets
 import austral.ingsis.permissions.service.UserService
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ninjasquad.springmockk.MockkBean
@@ -28,7 +27,7 @@ class UserControllerTests {
 
     @Test
     fun getAllUsersTest() {
-        val users = listOf(CodeUser(1, "john", "noOne@mail.com", "1234", listOf()))
+        val users = listOf(UserSnippets())
         every { userService.findAllUsers() } returns users
 
         mockMvc.perform(get("/users"))
@@ -38,7 +37,7 @@ class UserControllerTests {
 
     @Test
     fun getUserByIdTest() {
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
+        val user = UserSnippets()
         every { userService.findUserById(1) } returns user
 
         mockMvc.perform(get("/users/1"))
@@ -48,8 +47,8 @@ class UserControllerTests {
 
     @Test
     fun createUserTest() {
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
-        every { userService.saveUser("john", "noOne@mail.com", "1234") } returns user
+        val user = UserSnippets()
+        every { userService.saveUser() } returns user
 
         mockMvc.perform(
             post("/users")
@@ -62,7 +61,7 @@ class UserControllerTests {
 
     @Test
     fun updateUserTest() {
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf())
+        val user = UserSnippets()
         every { userService.updateUser(1, user) } returns user
 
         mockMvc.perform(
@@ -85,7 +84,7 @@ class UserControllerTests {
     @Test
     fun getAllSnippetsTest() {
         val snippets = listOf(1L, 2L, 3L)
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234", snippets)
+        val user = UserSnippets(1, listOf(1L, 2L, 3L), emptyList())
         every { userService.findUserById(1) } returns user
 
         mockMvc.perform(get("/users/snippets/1"))
@@ -95,9 +94,9 @@ class UserControllerTests {
 
     @Test
     fun addSnippetTest() {
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf(1L))
+        val user = UserSnippets(1, emptyList(), emptyList())
         every { userService.findUserById(1L) } returns user
-        every { userService.updateUser(1L, any()) } returns user.copy(snippets = listOf(1L, 2L))
+        every { userService.updateUser(1L, any()) } returns user.copy()
 
         mockMvc.perform(
             put("/users/snippets/1/2"),
@@ -107,9 +106,9 @@ class UserControllerTests {
 
     @Test
     fun removeSnippetTest() {
-        val user = CodeUser(1, "john", "noOne@mail.com", "1234", listOf(1L, 2L))
+        val user = UserSnippets(1, listOf(1, 2, 3), emptyList())
         every { userService.findUserById(1) } returns user
-        every { userService.updateUser(1, any()) } returns user.copy(snippets = listOf(1L))
+        every { userService.updateUser(1, any()) } returns user.copy()
 
         mockMvc.perform(delete("/users/snippets/1/2"))
             .andExpect(status().isOk)

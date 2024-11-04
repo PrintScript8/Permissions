@@ -1,6 +1,6 @@
 package austral.ingsis.permissions.controller
 
-import austral.ingsis.permissions.model.CodeUser
+import austral.ingsis.permissions.model.UserSnippets
 import austral.ingsis.permissions.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -19,33 +19,27 @@ class UserController(
     @Autowired private val userService: UserService,
 ) {
     @GetMapping
-    fun getAllUsers(): List<CodeUser> {
+    fun getAllUsers(): List<UserSnippets> {
         return userService.findAllUsers()
     }
 
     @GetMapping("/{id}")
     fun getUserById(
         @PathVariable id: Long,
-    ): CodeUser? {
+    ): UserSnippets? {
         return userService.findUserById(id)
     }
 
     @PostMapping
-    fun createUser(
-        @RequestBody codeUser: CodeUser,
-    ): CodeUser {
-        return userService.saveUser(
-            codeUser.name,
-            codeUser.email,
-            codeUser.password,
-        )
+    fun createUser(): UserSnippets {
+        return userService.saveUser()
     }
 
     @PutMapping("/{id}")
     fun updateUser(
         @PathVariable id: Long,
-        @RequestBody codeUser: CodeUser,
-    ): CodeUser? {
+        @RequestBody codeUser: UserSnippets,
+    ): UserSnippets? {
         return userService.updateUser(id, codeUser)
     }
 
@@ -60,7 +54,7 @@ class UserController(
     fun getAllSnippets(
         @PathVariable id: Long,
     ): List<Long> {
-        return userService.findUserById(id)?.snippets ?: emptyList()
+        return userService.findUserById(id)?.owner ?: emptyList()
     }
 
     @PutMapping("/snippets/{id}/{snippetId}")
@@ -68,9 +62,9 @@ class UserController(
         @PathVariable id: Long,
         @PathVariable snippetId: Long,
     ): ResponseEntity<Void> {
-        val user: CodeUser = userService.findUserById(id) ?: return ResponseEntity.notFound().build()
-        if (!user.snippets.contains(snippetId)) {
-            user.snippets = user.snippets.plus(snippetId)
+        val user: UserSnippets = userService.findUserById(id) ?: return ResponseEntity.notFound().build()
+        if (!user.owner.contains(snippetId)) {
+            user.owner = user.owner.plus(snippetId)
             userService.updateUser(user.id, user)
         }
         return ResponseEntity.ok().build()
@@ -82,7 +76,7 @@ class UserController(
         @PathVariable snippetId: Long,
     ): ResponseEntity<Void> {
         val user = userService.findUserById(id) ?: return ResponseEntity.notFound().build()
-        user.snippets = user.snippets.minus(snippetId)
+        user.owner = user.owner.minus(snippetId)
         userService.updateUser(user.id, user)
         return ResponseEntity.ok().build()
     }
