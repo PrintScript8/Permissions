@@ -9,12 +9,10 @@ class UserFactoryTests {
 
     @Test
     fun createUserTest() {
-        val user = userFactory.buildUser("john", "noOne@mail.com", "1234")
+        val user = userFactory.buildUser(listOf(), listOf())
 
-        Assertions.assertEquals("john", user.name)
-        Assertions.assertEquals("noOne@mail.com", user.email)
-        Assertions.assertEquals("1234", user.password)
         Assertions.assertEquals(0L, user.id)
-        Assertions.assertEquals(listOf<Double>(), user.snippets)
+        Assertions.assertEquals(listOf<Long>(), user.owner)
+        Assertions.assertEquals(listOf<Long>(), user.collaborator)
     }
 }
