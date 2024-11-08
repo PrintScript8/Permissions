@@ -3,6 +3,7 @@ package austral.ingsis.permissions.service
 import austral.ingsis.permissions.factory.UserFactory
 import austral.ingsis.permissions.model.UserSnippets
 import austral.ingsis.permissions.repository.UserRepositoryInterface
+import io.micrometer.core.instrument.MeterRegistry
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -10,5 +10,5 @@ COPY build/libs/permissions-0.0.1-SNAPSHOT.jar app.jar
 # Expose port 8080 to the host
 EXPOSE 8080
 
-# Define the command to run the application
+# Define the command to run the application with New Relic agent
 CMD ["java", "-jar", "app.jar"]
