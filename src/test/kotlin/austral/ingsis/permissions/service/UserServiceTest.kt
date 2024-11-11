@@ -42,7 +42,7 @@ class UserServiceTest {
         val page = 0
         val pageSize = 10
         val pageable = PageRequest.of(page, pageSize)
-        val userSnippets = listOf(UserSnippets(1L, "testUser", listOf(), listOf()))
+        val userSnippets = listOf(UserSnippets("st-id", "testUser", listOf(), listOf()))
         val pageResult: Page<UserSnippets> = PageImpl(userSnippets)
 
         `when`(userRepository.findByNameContaining(name, pageable)).thenReturn(pageResult)
@@ -57,7 +57,7 @@ class UserServiceTest {
         val page = 0
         val pageSize = 10
         val pageable = PageRequest.of(page, pageSize)
-        val userSnippets = listOf(UserSnippets(1L, "testUser", listOf(), listOf()))
+        val userSnippets = listOf(UserSnippets("st-id", "testUser", listOf(), listOf()))
         val pageResult: Page<UserSnippets> = PageImpl(userSnippets)
 
         `when`(userRepository.findAll(pageable)).thenReturn(pageResult)
@@ -69,7 +69,7 @@ class UserServiceTest {
 
     @Test
     fun `test findUserById`() {
-        val id = 1L
+        val id = "st-id"
         val userSnippet = UserSnippets(id, "testUser", listOf(), listOf())
 
         `when`(userRepository.findById(id)).thenReturn(java.util.Optional.of(userSnippet))
@@ -81,7 +81,7 @@ class UserServiceTest {
 
     @Test
     fun `test updateUser`() {
-        val id = 1L
+        val id = "st-id"
         val userSnippet = UserSnippets(id, "testUser", listOf(), listOf())
 
         `when`(userRepository.existsById(id)).thenReturn(true)
@@ -94,7 +94,7 @@ class UserServiceTest {
 
     @Test
     fun `test deleteUser`() {
-        val id = 1L
+        val id = "st-id"
 
         doNothing().`when`(userRepository).deleteById(id)
 

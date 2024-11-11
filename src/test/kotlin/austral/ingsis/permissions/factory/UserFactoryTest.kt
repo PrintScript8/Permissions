@@ -12,9 +12,9 @@ class UserFactoryTest {
         val owner = listOf(1L, 2L)
         val collaborator = listOf(3L, 4L)
 
-        val userSnippets = userFactory.buildUser(name, owner, collaborator)
+        val userSnippets = userFactory.buildUser("st-id", name, owner, collaborator)
 
-        assertEquals(0L, userSnippets.id)
+        assertEquals("st-id", userSnippets.id)
         assertEquals(name, userSnippets.name)
         assertEquals(owner, userSnippets.owner)
         assertEquals(collaborator, userSnippets.collaborator)

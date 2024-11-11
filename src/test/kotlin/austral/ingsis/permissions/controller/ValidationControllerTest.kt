@@ -20,7 +20,7 @@ class ValidationControllerTest {
 
     @Test
     fun `test createSnippet when user exists`() {
-        val userId = 1L
+        val userId = "st-id"
         Mockito.`when`(validationService.exists(userId)).thenReturn(true)
 
         mockMvc.perform(put("/validate/create/$userId"))
@@ -29,7 +29,7 @@ class ValidationControllerTest {
 
     @Test
     fun `test createSnippet when user does not exist`() {
-        val userId = 1L
+        val userId = "st-id"
         Mockito.`when`(validationService.exists(userId)).thenReturn(false)
 
         mockMvc.perform(put("/validate/create/$userId"))
@@ -38,7 +38,7 @@ class ValidationControllerTest {
 
     @Test
     fun `test editSnippet when user can modify`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
         Mockito.`when`(validationService.canModify(userId, snippetId)).thenReturn(true)
 
@@ -48,7 +48,7 @@ class ValidationControllerTest {
 
     @Test
     fun `test editSnippet when user cannot modify`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
         Mockito.`when`(validationService.canModify(userId, snippetId)).thenReturn(false)
 
@@ -58,7 +58,7 @@ class ValidationControllerTest {
 
     @Test
     fun `test readSnippet when user can read`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
         Mockito.`when`(validationService.canRead(userId, snippetId)).thenReturn(true)
 
@@ -68,7 +68,7 @@ class ValidationControllerTest {
 
     @Test
     fun `test readSnippet when user cannot read`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
         Mockito.`when`(validationService.canRead(userId, snippetId)).thenReturn(false)
 
@@ -78,7 +78,7 @@ class ValidationControllerTest {
 
     @Test
     fun `test deleteSnippet when user can delete`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
         Mockito.`when`(validationService.canDelete(userId, snippetId)).thenReturn(true)
 
@@ -88,7 +88,7 @@ class ValidationControllerTest {
 
     @Test
     fun `test deleteSnippet when user cannot delete`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
         Mockito.`when`(validationService.canDelete(userId, snippetId)).thenReturn(false)
 

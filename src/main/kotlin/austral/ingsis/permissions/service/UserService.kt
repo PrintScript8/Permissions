@@ -39,12 +39,15 @@ class UserService(
 
     // This method should add a user if it is not already in the db
     // If the user is already created, it returns the one that is stored
-    fun saveUser(id: String, name: String): UserSnippets {
+    fun saveUser(
+        id: String,
+        name: String,
+    ): UserSnippets {
         val repoUser = userRepository.findById(id)
-        if (repoUser.isPresent){
-            return repoUser.get()
-        }
-        else {
+        if (repoUser.isPresent)
+            {
+                return repoUser.get()
+            } else {
             val codeUser: UserSnippets = userFactory.buildUser(id, name, listOf(), listOf())
             val user = userRepository.save(codeUser)
             snippetClient.put()

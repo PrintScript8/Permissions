@@ -10,7 +10,7 @@ class ValidationService(
     @Autowired private val userRepository: UserRepositoryInterface,
 ) {
     fun canModify(
-        userId: Long,
+        userId: String,
         snippetId: Long,
     ): Boolean {
         val relation: UserSnippets = userRepository.findById(userId).orElse(null)
@@ -18,19 +18,19 @@ class ValidationService(
     }
 
     fun canRead(
-        userId: Long,
+        userId: String,
         snippetId: Long,
     ): Boolean {
         val relation: UserSnippets = userRepository.findById(userId).orElse(null)
         return relation.owner.contains(snippetId) || relation.collaborator.contains(snippetId)
     }
 
-    fun exists(userId: Long): Boolean {
+    fun exists(userId: String): Boolean {
         return userRepository.existsById(userId)
     }
 
     fun canDelete(
-        userId: Long,
+        userId: String,
         snippetId: Long,
     ): Boolean {
         val relation: UserSnippets = userRepository.findById(userId).orElse(null)

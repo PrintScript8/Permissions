@@ -21,9 +21,9 @@ class ValidationServiceTest {
 
     @Test
     fun `test canModify returns true when user is owner`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
-        val userSnippets = UserSnippets(0L, "antonio", listOf(snippetId), listOf())
+        val userSnippets = UserSnippets("st-id", "antonio", listOf(snippetId), listOf())
 
         `when`(userRepository.findById(userId)).thenReturn(Optional.of(userSnippets))
 
@@ -33,9 +33,9 @@ class ValidationServiceTest {
 
     @Test
     fun `test canModify returns false when user is not owner`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 2L
-        val userSnippets = UserSnippets(0L, "antonio", listOf(1L), listOf())
+        val userSnippets = UserSnippets("st-id", "antonio", listOf(1L), listOf())
 
         `when`(userRepository.findById(userId)).thenReturn(Optional.of(userSnippets))
 
@@ -45,9 +45,9 @@ class ValidationServiceTest {
 
     @Test
     fun `test canRead returns true when user is owner or collaborator`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
-        val userSnippets = UserSnippets(0L, "antonio", listOf(snippetId), listOf(snippetId))
+        val userSnippets = UserSnippets("st-id", "antonio", listOf(snippetId), listOf(snippetId))
 
         `when`(userRepository.findById(userId)).thenReturn(Optional.of(userSnippets))
 
@@ -57,9 +57,9 @@ class ValidationServiceTest {
 
     @Test
     fun `test canRead returns false when user is neither owner nor collaborator`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 2L
-        val userSnippets = UserSnippets(0L, "antonio", listOf(1L), listOf(3L))
+        val userSnippets = UserSnippets("st-id", "antonio", listOf(1L), listOf(3L))
 
         `when`(userRepository.findById(userId)).thenReturn(Optional.of(userSnippets))
 
@@ -69,7 +69,7 @@ class ValidationServiceTest {
 
     @Test
     fun `test exists returns true when user exists`() {
-        val userId = 1L
+        val userId = "st-id"
 
         `when`(userRepository.existsById(userId)).thenReturn(true)
 
@@ -79,7 +79,7 @@ class ValidationServiceTest {
 
     @Test
     fun `test exists returns false when user does not exist`() {
-        val userId = 1L
+        val userId = "st-id"
 
         `when`(userRepository.existsById(userId)).thenReturn(false)
 
@@ -89,9 +89,9 @@ class ValidationServiceTest {
 
     @Test
     fun `test canDelete returns true when user is owner`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 1L
-        val userSnippets = UserSnippets(0L, "antonio", listOf(snippetId), listOf())
+        val userSnippets = UserSnippets("st-id", "antonio", listOf(snippetId), listOf())
 
         `when`(userRepository.findById(userId)).thenReturn(Optional.of(userSnippets))
 
@@ -101,9 +101,9 @@ class ValidationServiceTest {
 
     @Test
     fun `test canDelete returns false when user is not owner`() {
-        val userId = 1L
+        val userId = "st-id"
         val snippetId = 2L
-        val userSnippets = UserSnippets(0L, "antonio", listOf(1L), listOf())
+        val userSnippets = UserSnippets("st-id", "antonio", listOf(1L), listOf())
 
         `when`(userRepository.findById(userId)).thenReturn(Optional.of(userSnippets))
 
