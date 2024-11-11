@@ -33,7 +33,7 @@ class AuthServiceTest {
 
         Mockito.`when`(
             restTemplate.exchange(
-                "http://authorization:8087/authorize/auth0",
+                "http://authorization-service:8080/authorize/auth0",
                 HttpMethod.POST,
                 requestEntity,
                 Map::class.java,
@@ -53,7 +53,7 @@ class AuthServiceTest {
 
         Mockito.`when`(
             restTemplate.exchange(
-                "http://authorization:8087/authorize/auth0",
+                "http://authorization-service:8080/authorize/auth0",
                 HttpMethod.POST,
                 requestEntity,
                 Map::class.java,
@@ -73,7 +73,7 @@ class AuthServiceTest {
 
         Mockito.`when`(
             restTemplate.exchange(
-                "http://authorization:8087/authorize/auth0",
+                "http://authorization-service:808/authorize/auth0",
                 HttpMethod.POST,
                 requestEntity,
                 Map::class.java,

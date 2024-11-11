@@ -2,13 +2,13 @@ package austral.ingsis.permissions.controller
 
 import austral.ingsis.permissions.service.AuthService
 import austral.ingsis.permissions.service.ValidationService
-import jakarta.servlet.http.HttpServletRequest
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.nio.file.AccessDeniedException
@@ -31,8 +31,9 @@ class ValidationController(
     private val logger: Logger = LogManager.getLogger(ValidationController::class.java)
 
     @PutMapping("/create")
-    fun createSnippet(request: HttpServletRequest): ResponseEntity<Boolean> {
-        val token = request.getHeader("Authorization")
+    fun createSnippet(
+        @RequestHeader("Authorization") token: String,
+    ): ResponseEntity<Boolean> {
         val userId = getIdByToken(token)
 
         val exists = validationService.exists(userId)
@@ -47,9 +48,8 @@ class ValidationController(
     @PutMapping("/edit/{snippetId}")
     fun editSnippet(
         @PathVariable snippetId: Long,
-        request: HttpServletRequest,
+        @RequestHeader("Authorization") token: String,
     ): ResponseEntity<Boolean> {
-        val token = request.getHeader("Authorization")
         val userId = getIdByToken(token)
 
         val canModify = validationService.canModify(userId, snippetId)
@@ -64,9 +64,8 @@ class ValidationController(
     @PutMapping("/read/{snippetId}")
     fun readSnippet(
         @PathVariable snippetId: Long,
-        request: HttpServletRequest,
+        @RequestHeader("Authorization") token: String,
     ): ResponseEntity<Boolean> {
-        val token = request.getHeader("Authorization")
         val userId = getIdByToken(token)
 
         val canRead = validationService.canRead(userId, snippetId)
@@ -81,9 +80,8 @@ class ValidationController(
     @PutMapping("/delete/{snippetId}")
     fun deleteSnippet(
         @PathVariable snippetId: Long,
-        request: HttpServletRequest,
+        @RequestHeader("Authorization") token: String,
     ): ResponseEntity<Boolean> {
-        val token = request.getHeader("Authorization")
         val userId = getIdByToken(token)
 
         val canDelete = validationService.canDelete(userId, snippetId)

@@ -22,7 +22,7 @@ class AuthService {
             // Send request to authorization service
             val response =
                 restTemplate.exchange(
-                    "http://authorization:8087/authorize/auth0",
+                    "http://authorization-service:8080/authorize/auth0",
                     HttpMethod.POST,
                     requestEntity,
                     Map::class.java,
