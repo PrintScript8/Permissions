@@ -1,6 +1,8 @@
 package austral.ingsis.permissions.controller
 
+import austral.ingsis.permissions.service.AuthService
 import austral.ingsis.permissions.service.ValidationService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,12 +20,23 @@ class ValidationControllerTest {
     @MockBean
     private lateinit var validationService: ValidationService
 
+    @MockBean
+    private lateinit var authService: AuthService
+
+    @BeforeEach
+    fun setUp() {
+        Mockito.`when`(authService.validateToken(Mockito.anyString())).thenReturn("st-id")
+    }
+
     @Test
     fun `test createSnippet when user exists`() {
         val userId = "st-id"
         Mockito.`when`(validationService.exists(userId)).thenReturn(true)
 
-        mockMvc.perform(put("/validate/create/$userId"))
+        mockMvc.perform(
+            put("/validate/create")
+                .header("Authorization", "st-id"),
+        )
             .andExpect(status().isOk)
     }
 
@@ -32,7 +45,10 @@ class ValidationControllerTest {
         val userId = "st-id"
         Mockito.`when`(validationService.exists(userId)).thenReturn(false)
 
-        mockMvc.perform(put("/validate/create/$userId"))
+        mockMvc.perform(
+            put("/validate/create")
+                .header("Authorization", "st-id"),
+        )
             .andExpect(status().isOk)
     }
 
@@ -42,7 +58,10 @@ class ValidationControllerTest {
         val snippetId = 1L
         Mockito.`when`(validationService.canModify(userId, snippetId)).thenReturn(true)
 
-        mockMvc.perform(put("/validate/edit/$userId/$snippetId"))
+        mockMvc.perform(
+            put("/validate/edit/$snippetId")
+                .header("Authorization", "st-id"),
+        )
             .andExpect(status().isOk)
     }
 
@@ -52,7 +71,10 @@ class ValidationControllerTest {
         val snippetId = 1L
         Mockito.`when`(validationService.canModify(userId, snippetId)).thenReturn(false)
 
-        mockMvc.perform(put("/validate/edit/$userId/$snippetId"))
+        mockMvc.perform(
+            put("/validate/edit/$snippetId")
+                .header("Authorization", "st-id"),
+        )
             .andExpect(status().isOk)
     }
 
@@ -62,7 +84,10 @@ class ValidationControllerTest {
         val snippetId = 1L
         Mockito.`when`(validationService.canRead(userId, snippetId)).thenReturn(true)
 
-        mockMvc.perform(put("/validate/read/$userId/$snippetId"))
+        mockMvc.perform(
+            put("/validate/read/$snippetId")
+                .header("Authorization", "st-id"),
+        )
             .andExpect(status().isOk)
     }
 
@@ -72,7 +97,10 @@ class ValidationControllerTest {
         val snippetId = 1L
         Mockito.`when`(validationService.canRead(userId, snippetId)).thenReturn(false)
 
-        mockMvc.perform(put("/validate/read/$userId/$snippetId"))
+        mockMvc.perform(
+            put("/validate/read/$snippetId")
+                .header("Authorization", "st-id"),
+        )
             .andExpect(status().isOk)
     }
 
@@ -82,7 +110,10 @@ class ValidationControllerTest {
         val snippetId = 1L
         Mockito.`when`(validationService.canDelete(userId, snippetId)).thenReturn(true)
 
-        mockMvc.perform(put("/validate/delete/$userId/$snippetId"))
+        mockMvc.perform(
+            put("/validate/delete/$snippetId")
+                .header("Authorization", "st-id"),
+        )
             .andExpect(status().isOk)
     }
 
@@ -92,7 +123,10 @@ class ValidationControllerTest {
         val snippetId = 1L
         Mockito.`when`(validationService.canDelete(userId, snippetId)).thenReturn(false)
 
-        mockMvc.perform(put("/validate/delete/$userId/$snippetId"))
+        mockMvc.perform(
+            put("/validate/delete/$snippetId")
+                .header("Authorization", "st-id"),
+        )
             .andExpect(status().isOk)
     }
 }

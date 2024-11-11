@@ -24,12 +24,11 @@ class UserController(
     @Autowired private val userService: UserService,
     @Autowired private val authService: AuthService,
 ) {
-    private fun getIdByToken(token: String): String  {
+    private fun getIdByToken(token: String): String {
         val id: String? = authService.validateToken(token)
-        if (id != null)
-            {
-                return id
-            }
+        if (id != null) {
+            return id
+        }
         // error, not authenticated
         throw AccessDeniedException("Could not validate user by it's token")
     }

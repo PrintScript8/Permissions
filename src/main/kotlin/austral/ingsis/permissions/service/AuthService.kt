@@ -5,13 +5,11 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
-import java.net.UnknownHostException
 
 @Service
 class AuthService {
-    private val restTemplate = RestTemplate()
+    var restTemplate = RestTemplate()
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     fun validateToken(token: String): String? {
@@ -39,8 +37,7 @@ class AuthService {
                 }
                 else -> null
             }
-
-        } catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
     }

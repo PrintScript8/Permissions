@@ -48,7 +48,7 @@ class UserControllerTest {
                 .param("page", "0")
                 .param("pageSize", "10")
                 .header("Authorization", "st-id"),
-            )
+        )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.count").value(users.size))
             .andExpect(jsonPath("$.users[0].name").value("John Doe"))
@@ -76,7 +76,7 @@ class UserControllerTest {
             post("/users")
                 .header("name", "John Doe")
                 .header("Authorization", "st-id"),
-            )
+        )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.name").value("John Doe"))
     }
@@ -91,7 +91,7 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user))
                 .header("Authorization", "st-id"),
-            )
+        )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.name").value("John Doe"))
     }
