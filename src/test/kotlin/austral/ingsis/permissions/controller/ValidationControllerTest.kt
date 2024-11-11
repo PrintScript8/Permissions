@@ -2,97 +2,97 @@ package austral.ingsis.permissions.controller
 
 import austral.ingsis.permissions.service.ValidationService
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.mockito.Mockito
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@ExtendWith(MockitoExtension::class)
+@WebMvcTest(ValidationController::class)
 class ValidationControllerTest {
-    @Mock
+    @Autowired
+    private lateinit var mockMvc: MockMvc
+
+    @MockBean
     private lateinit var validationService: ValidationService
 
-    @InjectMocks
-    private lateinit var validationController: ValidationController
-
     @Test
-    fun `createSnippet should return true when user exists`() {
+    fun `test createSnippet when user exists`() {
         val userId = 1L
-        `when`(validationService.exists(userId)).thenReturn(true)
-        val response: ResponseEntity<Boolean> = validationController.createSnippet(userId)
-        assert(response.statusCode == HttpStatus.OK)
-        assert(response.body == true)
+        Mockito.`when`(validationService.exists(userId)).thenReturn(true)
+
+        mockMvc.perform(put("/validate/create/$userId"))
+            .andExpect(status().isOk)
     }
 
     @Test
-    fun `createSnippet should return false when user does not exist`() {
+    fun `test createSnippet when user does not exist`() {
         val userId = 1L
-        `when`(validationService.exists(userId)).thenReturn(false)
-        val response: ResponseEntity<Boolean> = validationController.createSnippet(userId)
-        assert(response.statusCode == HttpStatus.OK)
-        assert(response.body == false)
+        Mockito.`when`(validationService.exists(userId)).thenReturn(false)
+
+        mockMvc.perform(put("/validate/create/$userId"))
+            .andExpect(status().isOk)
     }
 
     @Test
-    fun `editSnippet should return true when user can modify snippet`() {
+    fun `test editSnippet when user can modify`() {
         val userId = 1L
         val snippetId = 1L
-        `when`(validationService.canModify(userId, snippetId)).thenReturn(true)
-        val response: ResponseEntity<Boolean> = validationController.editSnippet(userId, snippetId)
-        assert(response.statusCode == HttpStatus.OK)
-        assert(response.body == true)
+        Mockito.`when`(validationService.canModify(userId, snippetId)).thenReturn(true)
+
+        mockMvc.perform(put("/validate/edit/$userId/$snippetId"))
+            .andExpect(status().isOk)
     }
 
     @Test
-    fun `editSnippet should return false when user cannot modify snippet`() {
+    fun `test editSnippet when user cannot modify`() {
         val userId = 1L
         val snippetId = 1L
-        `when`(validationService.canModify(userId, snippetId)).thenReturn(false)
-        val response: ResponseEntity<Boolean> = validationController.editSnippet(userId, snippetId)
-        assert(response.statusCode == HttpStatus.OK)
-        assert(response.body == false)
+        Mockito.`when`(validationService.canModify(userId, snippetId)).thenReturn(false)
+
+        mockMvc.perform(put("/validate/edit/$userId/$snippetId"))
+            .andExpect(status().isOk)
     }
 
     @Test
-    fun `readSnippet should return true when user can read snippet`() {
+    fun `test readSnippet when user can read`() {
         val userId = 1L
         val snippetId = 1L
-        `when`(validationService.canRead(userId, snippetId)).thenReturn(true)
-        val response: ResponseEntity<Boolean> = validationController.readSnippet(userId, snippetId)
-        assert(response.statusCode == HttpStatus.OK)
-        assert(response.body == true)
+        Mockito.`when`(validationService.canRead(userId, snippetId)).thenReturn(true)
+
+        mockMvc.perform(put("/validate/read/$userId/$snippetId"))
+            .andExpect(status().isOk)
     }
 
     @Test
-    fun `readSnippet should return false when user cannot read snippet`() {
+    fun `test readSnippet when user cannot read`() {
         val userId = 1L
         val snippetId = 1L
-        `when`(validationService.canRead(userId, snippetId)).thenReturn(false)
-        val response: ResponseEntity<Boolean> = validationController.readSnippet(userId, snippetId)
-        assert(response.statusCode == HttpStatus.OK)
-        assert(response.body == false)
+        Mockito.`when`(validationService.canRead(userId, snippetId)).thenReturn(false)
+
+        mockMvc.perform(put("/validate/read/$userId/$snippetId"))
+            .andExpect(status().isOk)
     }
 
     @Test
-    fun `deleteSnippet should return true when user can delete snippet`() {
+    fun `test deleteSnippet when user can delete`() {
         val userId = 1L
         val snippetId = 1L
-        `when`(validationService.canDelete(userId, snippetId)).thenReturn(true)
-        val response: ResponseEntity<Boolean> = validationController.deleteSnippet(userId, snippetId)
-        assert(response.statusCode == HttpStatus.OK)
-        assert(response.body == true)
+        Mockito.`when`(validationService.canDelete(userId, snippetId)).thenReturn(true)
+
+        mockMvc.perform(put("/validate/delete/$userId/$snippetId"))
+            .andExpect(status().isOk)
     }
 
     @Test
-    fun `deleteSnippet should return false when user cannot delete snippet`() {
+    fun `test deleteSnippet when user cannot delete`() {
         val userId = 1L
         val snippetId = 1L
-        `when`(validationService.canDelete(userId, snippetId)).thenReturn(false)
-        val response: ResponseEntity<Boolean> = validationController.deleteSnippet(userId, snippetId)
-        assert(response.statusCode == HttpStatus.OK)
-        assert(response.body == false)
+        Mockito.`when`(validationService.canDelete(userId, snippetId)).thenReturn(false)
+
+        mockMvc.perform(put("/validate/delete/$userId/$snippetId"))
+            .andExpect(status().isOk)
     }
 }

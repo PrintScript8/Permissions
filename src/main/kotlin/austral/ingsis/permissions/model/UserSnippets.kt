@@ -11,11 +11,12 @@ data class UserSnippets(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+    val name: String,
     @ElementCollection
     var owner: List<Long>,
     @ElementCollection
     var collaborator: List<Long>,
 ) {
     // no-argument constructor is necessary for JPA to function correctly
-    constructor() : this(0, emptyList(), emptyList())
+    constructor() : this(0, "", emptyList(), emptyList())
 }
