@@ -33,25 +33,33 @@ class UserService(
         }
     }
 
-    fun findUserById(id: Long): UserSnippets? {
+    fun findUserById(id: String): UserSnippets? {
         return userRepository.findById(id).orElse(null)
     }
 
-    fun saveUser(name: String): UserSnippets {
-        val codeUser: UserSnippets = userFactory.buildUser(name, listOf(), listOf())
-        val user = userRepository.save(codeUser)
-        snippetClient.put()
-            .uri { uriBuilder ->
-                uriBuilder.path("/snippets/config/initialize/{userId}")
-                    .queryParam("language", "printscript")
-                    .build(user.id)
-            }
-            .retrieve()
-        return user
+    // This method should add a user if it is not already in the db
+    // If the user is already created, it returns the one that is stored
+    fun saveUser(id: String, name: String): UserSnippets {
+        val repoUser = userRepository.findById(id)
+        if (repoUser.isPresent){
+            return repoUser.get()
+        }
+        else {
+            val codeUser: UserSnippets = userFactory.buildUser(id, name, listOf(), listOf())
+            val user = userRepository.save(codeUser)
+            snippetClient.put()
+                .uri { uriBuilder ->
+                    uriBuilder.path("/snippets/config/initialize/{userId}")
+                        .queryParam("language", "printscript")
+                        .build(user.id)
+                }
+                .retrieve()
+            return user
+        }
     }
 
     fun updateUser(
-        id: Long,
+        id: String,
         codeUser: UserSnippets,
     ): UserSnippets? {
         return if (userRepository.existsById(id)) {
@@ -61,7 +69,7 @@ class UserService(
         }
     }
 
-    fun deleteUser(id: Long) {
+    fun deleteUser(id: String) {
         userRepository.deleteById(id)
     }
 }

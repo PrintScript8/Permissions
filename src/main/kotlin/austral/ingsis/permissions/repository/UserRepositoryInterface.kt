@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UserRepositoryInterface : JpaRepository<UserSnippets, Long> {
+interface UserRepositoryInterface : JpaRepository<UserSnippets, String> {
     fun findByNameContaining(
         name: String,
         pageable: Pageable,

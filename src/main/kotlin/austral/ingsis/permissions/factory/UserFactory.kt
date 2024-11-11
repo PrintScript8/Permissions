@@ -6,10 +6,11 @@ import org.springframework.stereotype.Component
 @Component
 class UserFactory {
     fun buildUser(
+        id: String,
         name: String,
         owner: List<Long>,
         collaborator: List<Long>,
     ): UserSnippets {
-        return UserSnippets(0L, name, owner, collaborator)
+        return UserSnippets(id, name, owner, collaborator)
     }
 }

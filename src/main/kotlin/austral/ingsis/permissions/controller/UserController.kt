@@ -15,22 +15,37 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import austral.ingsis.permissions.service.AuthService
+import java.nio.file.AccessDeniedException
 
 @RestController
 @RequestMapping("/users")
 class UserController(
     @Autowired private val userService: UserService,
+    @Autowired private val authService: AuthService
 ) {
+
+    private fun getIdByToken(token: String): String{
+        val id: String? = authService.validateToken(token)
+        if(id != null){
+            return id
+        }
+        // error, not authenticated
+        throw AccessDeniedException("Could not validate user by it's token")
+    }
+
     private val logger = LogManager.getLogger(UserController::class.java)
 
-    @GetMapping
+    @GetMapping("/all")
     fun getAllUsers(
         @RequestParam name: String?,
         @RequestParam page: Int,
         @RequestParam pageSize: Int,
         request: HttpServletRequest,
     ): ResponseEntity<Map<String, Any>> {
-        val userId = request.getHeader("id").toLong()
+        val token = request.getHeader("Authentication")
+        val userId = getIdByToken(token)
+
         val users = userService.findAllUsers(name, page, pageSize)
         val paginatedResponse =
             mapOf(
@@ -42,51 +57,57 @@ class UserController(
         return ResponseEntity.ok(paginatedResponse)
     }
 
-    @GetMapping("/{id}")
+    @GetMapping
     fun getUserById(
-        @PathVariable id: Long,
         request: HttpServletRequest,
     ): UserSnippets? {
-        val userId = request.getHeader("id").toLong()
-        return userService.findUserById(id)
+        val token = request.getHeader("Authentication")
+        val userId = getIdByToken(token)
+
+        return userService.findUserById(userId)
     }
 
     @PostMapping
     fun createUser(
-        request: HttpServletRequest,
-        @RequestParam name: String,
+        request: HttpServletRequest
     ): ResponseEntity<UserSnippets> {
-        val userId = request.getHeader("id").toLong()
-        val user = userService.saveUser(name)
+        val token: String = request.getHeader("Authorization")
+        val id: String = getIdByToken(token)
+
+        val name = request.getHeader("name")
+        val user = userService.saveUser(id, name)
         return ResponseEntity.ok(user)
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     fun updateUser(
-        @PathVariable id: Long,
         @RequestBody codeUser: UserSnippets,
         request: HttpServletRequest,
     ): UserSnippets? {
-        val userId = request.getHeader("id").toLong()
-        return userService.updateUser(id, codeUser)
+        val token = request.getHeader("Authentication")
+        val userId = getIdByToken(token)
+
+        return userService.updateUser(userId, codeUser)
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     fun deleteUser(
-        @PathVariable id: Long,
         request: HttpServletRequest,
     ) {
-        val userId = request.getHeader("id").toLong()
-        return userService.deleteUser(id)
+        val token = request.getHeader("Authentication")
+        val userId = getIdByToken(token)
+
+        return userService.deleteUser(userId)
     }
 
-    @GetMapping("/snippets/{id}")
+    @GetMapping("/snippets")
     fun getAllSnippets(
-        @PathVariable id: Long,
         request: HttpServletRequest,
     ): List<Long> {
-        val userId = request.getHeader("id").toLong()
-        val snippets = userService.findUserById(id)?.owner ?: emptyList()
+        val token = request.getHeader("Authentication")
+        val userId = getIdByToken(token)
+
+        val snippets = userService.findUserById(userId)?.owner ?: emptyList()
         logger.info("User with id $userId has snippets $snippets")
         return snippets
     }
@@ -96,7 +117,9 @@ class UserController(
         @PathVariable snippetId: Long,
         request: HttpServletRequest,
     ): ResponseEntity<Void> {
-        val userId = request.getHeader("id").toLong()
+        val token = request.getHeader("Authentication")
+        val userId = getIdByToken(token)
+
         val user: UserSnippets = userService.findUserById(userId) ?: return ResponseEntity.notFound().build()
         if (!user.owner.contains(snippetId)) {
             user.owner = user.owner.plus(snippetId)
@@ -111,7 +134,9 @@ class UserController(
         @RequestBody shareSnippetRequest: ShareSnippetRequest,
         request: HttpServletRequest,
     ): ResponseEntity<Void> {
-        val userId = request.getHeader("id").toLong()
+        val token = request.getHeader("Authentication")
+        val userId = getIdByToken(token)
+
         if (userId == shareSnippetRequest.id) return ResponseEntity.badRequest().build()
         val user: UserSnippets =
             userService.findUserById(shareSnippetRequest.id)
@@ -123,14 +148,15 @@ class UserController(
         return ResponseEntity.ok().build()
     }
 
-    @DeleteMapping("/snippets/{id}/{snippetId}")
+    @DeleteMapping("/snippets/{snippetId}")
     fun removeSnippet(
-        @PathVariable id: Long,
         @PathVariable snippetId: Long,
         request: HttpServletRequest,
     ): ResponseEntity<Void> {
-        val userId = request.getHeader("id").toLong()
-        val user = userService.findUserById(id) ?: return ResponseEntity.notFound().build()
+        val token = request.getHeader("Authentication")
+        val userId = getIdByToken(token)
+
+        val user = userService.findUserById(userId) ?: return ResponseEntity.notFound().build()
         user.owner = user.owner.minus(snippetId)
         userService.updateUser(user.id, user)
         return ResponseEntity.ok().build()
@@ -139,7 +165,7 @@ class UserController(
 
 data class ShareSnippetRequest(
     val snippetId: Long,
-    val id: Long,
+    val id: String,
 )
 
 /**

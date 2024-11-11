@@ -9,8 +9,7 @@ import jakarta.persistence.Id
 @Entity
 data class UserSnippets(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    val id: String,
     val name: String,
     @ElementCollection
     var owner: List<Long>,
@@ -18,5 +17,5 @@ data class UserSnippets(
     var collaborator: List<Long>,
 ) {
     // no-argument constructor is necessary for JPA to function correctly
-    constructor() : this(0, "", emptyList(), emptyList())
+    constructor() : this("", "", emptyList(), emptyList())
 }
