@@ -42,23 +42,25 @@ class UserService(
     fun saveUser(
         id: String,
         name: String,
-    ): UserSnippets {
-        val repoUser = userRepository.findById(id)
-        if (repoUser.isPresent) {
-            return repoUser.get()
-        } else {
-            val codeUser: UserSnippets = userFactory.buildUser(id, name, listOf(), listOf())
-            val user = userRepository.save(codeUser)
-            snippetClient.put()
-                .uri { uriBuilder ->
-                    uriBuilder.path("/snippets/config/initialize/{userId}")
-                        .queryParam("language", "printscript")
-                        .build(user.id)
-                }
-                .retrieve()
-            return user
+    ): UserSnippets =
+        synchronized(this) {
+            val repoUser = userRepository.findById(id)
+            logger.info("User retrieved: $repoUser")
+            if (repoUser.isPresent) {
+                return repoUser.get()
+            } else {
+                val codeUser: UserSnippets = userFactory.buildUser(id, name, listOf(), listOf())
+                val user = userRepository.save(codeUser)
+                snippetClient.put()
+                    .uri { uriBuilder ->
+                        uriBuilder.path("/snippets/config/initialize/{userId}")
+                            .queryParam("language", "printscript")
+                            .build(user.id)
+                    }
+                    .retrieve()
+                return user
+            }
         }
-    }
 
     fun updateUser(
         id: String,
