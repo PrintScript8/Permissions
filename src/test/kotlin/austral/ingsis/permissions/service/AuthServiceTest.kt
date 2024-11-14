@@ -8,6 +8,8 @@ import org.mockito.MockitoAnnotations
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
 
 class AuthServiceTest {
@@ -28,8 +30,8 @@ class AuthServiceTest {
         val headers = HttpHeaders()
         headers.set("Authorization", token)
         val requestEntity = HttpEntity<String>(headers)
-        // val responseBody = mapOf("id" to "user-id")
-        // val responseEntity = ResponseEntity(responseBody, HttpStatus.OK)
+        val responseBody = mapOf("id" to "user-id")
+        val responseEntity = ResponseEntity<Map<*, *>>(responseBody, HttpStatus.OK)
 
         Mockito.`when`(
             restTemplate.exchange(
@@ -38,7 +40,7 @@ class AuthServiceTest {
                 requestEntity,
                 Map::class.java,
             ),
-        )
+        ).thenReturn(responseEntity)
 
         val result = authService.validateToken(token)
     }
@@ -49,7 +51,7 @@ class AuthServiceTest {
         val headers = HttpHeaders()
         headers.set("Authorization", token)
         val requestEntity = HttpEntity<String>(headers)
-        // val responseEntity = ResponseEntity<Map<String, Any>>(HttpStatus.UNAUTHORIZED)
+        val responseEntity = ResponseEntity<Map<*, *>>(HttpStatus.UNAUTHORIZED)
 
         Mockito.`when`(
             restTemplate.exchange(
@@ -58,7 +60,7 @@ class AuthServiceTest {
                 requestEntity,
                 Map::class.java,
             ),
-        )
+        ).thenReturn(responseEntity)
 
         val result = authService.validateToken(token)
         assertNull(result)

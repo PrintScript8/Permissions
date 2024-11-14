@@ -2,6 +2,7 @@ package austral.ingsis.permissions.controller
 
 import austral.ingsis.permissions.service.AuthService
 import austral.ingsis.permissions.service.ValidationService
+import com.newrelic.api.agent.Trace
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,10 +32,12 @@ class ValidationController(
     private val logger: Logger = LogManager.getLogger(ValidationController::class.java)
 
     @PutMapping("/create")
+    @Trace(dispatcher = true)
     fun createSnippet(
         @RequestHeader("Authorization") token: String,
     ): ResponseEntity<Boolean> {
         val userId = getIdByToken(token)
+        logger.info("User with id $userId is creating a snippet")
 
         val exists = validationService.exists(userId)
         if (!exists) {

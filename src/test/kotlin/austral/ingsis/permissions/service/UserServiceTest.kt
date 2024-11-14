@@ -6,6 +6,7 @@ import austral.ingsis.permissions.repository.UserRepositoryInterface
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.any
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
@@ -31,6 +32,7 @@ class UserServiceTest {
         val restClient = mock(RestClient::class.java)
 
         `when`(restBuilder.baseUrl(anyString())).thenReturn(restBuilder)
+        `when`(restBuilder.requestInterceptor(any())).thenReturn(restBuilder)
         `when`(restBuilder.build()).thenReturn(restClient)
 
         userService = UserService(userRepository, userFactory, restBuilder)
@@ -101,5 +103,20 @@ class UserServiceTest {
         userService.deleteUser(id)
 
         verify(userRepository, times(1)).deleteById(id)
+    }
+
+    @Test
+    fun `test saveUser when user exists`() {
+        val id = "st-id"
+        val name = "testUser"
+        val userSnippet = UserSnippets(id, name, listOf(), listOf())
+
+        `when`(userRepository.findById(id)).thenReturn(java.util.Optional.of(userSnippet))
+
+        val result = userService.saveUser(id, name)
+
+        assertEquals(userSnippet, result)
+        verify(userRepository, times(1)).findById(id)
+        verify(userRepository, times(0)).save(userSnippet)
     }
 }
