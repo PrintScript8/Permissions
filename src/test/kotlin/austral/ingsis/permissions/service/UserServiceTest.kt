@@ -104,4 +104,19 @@ class UserServiceTest {
 
         verify(userRepository, times(1)).deleteById(id)
     }
+
+    @Test
+    fun `test saveUser when user exists`() {
+        val id = "st-id"
+        val name = "testUser"
+        val userSnippet = UserSnippets(id, name, listOf(), listOf())
+
+        `when`(userRepository.findById(id)).thenReturn(java.util.Optional.of(userSnippet))
+
+        val result = userService.saveUser(id, name)
+
+        assertEquals(userSnippet, result)
+        verify(userRepository, times(1)).findById(id)
+        verify(userRepository, times(0)).save(userSnippet)
+    }
 }
