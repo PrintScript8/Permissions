@@ -25,6 +25,12 @@ dependencies {
 	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	implementation 'org.postgresql:postgresql:42.5.4'
+	implementation 'com.newrelic.agent.java:newrelic-api:8.15.0'
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation 'com.newrelic.logging:logback:3.2.0'
+	testImplementation 'io.projectreactor:reactor-test'
+	implementation 'io.projectreactor.kotlin:reactor-kotlin-extensions'
+	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compileOnly 'org.projectlombok:lombok'

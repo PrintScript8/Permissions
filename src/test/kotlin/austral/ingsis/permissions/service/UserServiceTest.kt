@@ -6,6 +6,7 @@ import austral.ingsis.permissions.repository.UserRepositoryInterface
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.any
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
@@ -31,6 +32,7 @@ class UserServiceTest {
         val restClient = mock(RestClient::class.java)
 
         `when`(restBuilder.baseUrl(anyString())).thenReturn(restBuilder)
+        `when`(restBuilder.requestInterceptor(any())).thenReturn(restBuilder)
         `when`(restBuilder.build()).thenReturn(restClient)
 
         userService = UserService(userRepository, userFactory, restBuilder)

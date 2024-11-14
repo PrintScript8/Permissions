@@ -3,9 +3,11 @@ package austral.ingsis.permissions.service
 import austral.ingsis.permissions.factory.UserFactory
 import austral.ingsis.permissions.model.UserSnippets
 import austral.ingsis.permissions.repository.UserRepositoryInterface
+import austral.ingsis.permissions.server.CorrelationIdInterceptor
 import org.apache.logging.log4j.LogManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 
@@ -15,7 +17,8 @@ class UserService(
     @Autowired private val userFactory: UserFactory,
     @Autowired private val restBuilder: RestClient.Builder,
 ) {
-    val snippetClient = restBuilder.baseUrl("http://snippet-service:8080").build()
+    private val myInterceptor: ClientHttpRequestInterceptor = CorrelationIdInterceptor()
+    val snippetClient = restBuilder.baseUrl("http://snippet-service:8080").requestInterceptor(myInterceptor).build()
     private val logger = LogManager.getLogger(UserService::class.java)
 
     fun findAllUsers(
@@ -58,6 +61,7 @@ class UserService(
                             .build(user.id)
                     }
                     .retrieve()
+                logger.info("User saved: $user")
                 return user
             }
         }
@@ -67,13 +71,16 @@ class UserService(
         codeUser: UserSnippets,
     ): UserSnippets? {
         return if (userRepository.existsById(id)) {
+            logger.info("User updated: $codeUser")
             userRepository.save(codeUser.copy(id = id))
         } else {
+            logger.info("User not found: $id")
             null
         }
     }
 
     fun deleteUser(id: String) {
+        logger.info("User deleted: $id")
         userRepository.deleteById(id)
     }
 }
